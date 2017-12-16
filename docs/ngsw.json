@@ -1,0 +1,36 @@
+{
+  "configVersion": 1,
+  "index": "chrisportscheller/index.html",
+  "assetGroups": [
+    {
+      "name": "app",
+      "installMode": "prefetch",
+      "updateMode": "prefetch",
+      "urls": [
+        "chrisportscheller/favicon.ico",
+        "chrisportscheller/index.html",
+        "chrisportscheller/inline.837f069f27d44fce98f6.bundle.js",
+        "chrisportscheller/main.4f679ff08d5514394166.bundle.js",
+        "chrisportscheller/polyfills.f039bbc7aaddeebcb9aa.bundle.js",
+        "chrisportscheller/styles.d41d8cd98f00b204e980.bundle.css"
+      ],
+      "patterns": []
+    },
+    {
+      "name": "assets",
+      "installMode": "lazy",
+      "updateMode": "prefetch",
+      "urls": [],
+      "patterns": []
+    }
+  ],
+  "dataGroups": [],
+  "hashTable": {
+    "chrisportscheller/inline.837f069f27d44fce98f6.bundle.js": "bcf367c5a07464854d084b6f95481ec1c0a8ebc1",
+    "chrisportscheller/main.4f679ff08d5514394166.bundle.js": "f7235379bb2a9c1cce013aa30fe1b15378e9eb90",
+    "chrisportscheller/polyfills.f039bbc7aaddeebcb9aa.bundle.js": "669df48deb7f2148518a6e8e9490ba8ee2db7000",
+    "chrisportscheller/styles.d41d8cd98f00b204e980.bundle.css": "da39a3ee5e6b4b0d3255bfef95601890afd80709",
+    "chrisportscheller/favicon.ico": "84161b857f5c547e3699ddfbffc6d8d737542e01",
+    "chrisportscheller/index.html": "9a4dff6106b045221b7c5afc8926e0f1ec39f1a2"
+  }
+}
