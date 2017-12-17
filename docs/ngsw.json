@@ -9,10 +9,10 @@
       "urls": [
         "chrisportscheller/favicon.ico",
         "chrisportscheller/index.html",
-        "chrisportscheller/inline.613023b5b57db0ce4b7b.bundle.js",
-        "chrisportscheller/main.4f679ff08d5514394166.bundle.js",
+        "chrisportscheller/inline.1fa204a0c98c9f1481bd.bundle.js",
+        "chrisportscheller/main.767ba0f264e1c5b8e135.bundle.js",
         "chrisportscheller/polyfills.f039bbc7aaddeebcb9aa.bundle.js",
-        "chrisportscheller/styles.0aa0fa240a87e3209949.bundle.css"
+        "chrisportscheller/styles.b0b42eab4ed0db29d35d.bundle.css"
       ],
       "patterns": []
     },
@@ -20,17 +20,20 @@
       "name": "assets",
       "installMode": "lazy",
       "updateMode": "prefetch",
-      "urls": [],
+      "urls": [
+        "chrisportscheller/assets/logo.svg"
+      ],
       "patterns": []
     }
   ],
   "dataGroups": [],
   "hashTable": {
-    "chrisportscheller/inline.613023b5b57db0ce4b7b.bundle.js": "2ff8432063d1728d0b3fce63575283cef6e5fe20",
-    "chrisportscheller/main.4f679ff08d5514394166.bundle.js": "f7235379bb2a9c1cce013aa30fe1b15378e9eb90",
+    "chrisportscheller/inline.1fa204a0c98c9f1481bd.bundle.js": "a6b7da3b98950f30b2b09ffecf3290422bc9b24a",
+    "chrisportscheller/assets/logo.svg": "b6ec13907791341cd4337fd6019de701f0b28596",
+    "chrisportscheller/main.767ba0f264e1c5b8e135.bundle.js": "8e22e3ad6b905341fda687a66dbd1d6ed4d6c3f4",
     "chrisportscheller/polyfills.f039bbc7aaddeebcb9aa.bundle.js": "669df48deb7f2148518a6e8e9490ba8ee2db7000",
-    "chrisportscheller/styles.0aa0fa240a87e3209949.bundle.css": "b5647bc7bd7d331822d2a13b30653f35bccf2322",
-    "chrisportscheller/favicon.ico": "84161b857f5c547e3699ddfbffc6d8d737542e01",
-    "chrisportscheller/index.html": "27281c4b1eae6243bf375acb377afc0d2e9aa879"
+    "chrisportscheller/styles.b0b42eab4ed0db29d35d.bundle.css": "bee409967357b974d2d2a79d0f4b12252b2d1d3a",
+    "chrisportscheller/favicon.ico": "1023cb9dcc0d5a1bba5241405cf769b65c835bd6",
+    "chrisportscheller/index.html": "4b60a51215cc028f6f5d4d41fdfef09c12c8ea5a"
   }
 }
