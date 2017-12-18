@@ -8,16 +8,24 @@ import { AppComponent } from './app.component';
 
 import { environment } from '../environments/environment';
 import { LoadingComponent } from './components/loading/loading.component';
+import { MainComponent } from './routes/main/main.component';
+
+import { routes } from './routes';
+import {RouterModule} from "@angular/router";
 
 @NgModule({
   declarations: [
     AppComponent,
-    LoadingComponent
+    LoadingComponent,
+    MainComponent
   ],
   imports: [
     BrowserModule,
     BrowserAnimationsModule,
     ChrisMaterialModule,
+    RouterModule.forRoot(routes, {
+      useHash: false
+    }),
     ServiceWorkerModule.register('/ngsw-worker.js', { enabled: environment.production })
   ],
   providers: [],
