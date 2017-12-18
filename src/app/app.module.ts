@@ -7,10 +7,12 @@ import { ChrisMaterialModule } from './material.module';
 import { AppComponent } from './app.component';
 
 import { environment } from '../environments/environment';
+import { LoadingComponent } from './components/loading/loading.component';
 
 @NgModule({
   declarations: [
-    AppComponent
+    AppComponent,
+    LoadingComponent
   ],
   imports: [
     BrowserModule,
