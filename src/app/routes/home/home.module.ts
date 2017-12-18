@@ -1,6 +1,6 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { HomeHeroComponent } from './sections/home-hero/home-hero.component';
+import { HomeHeroComponent } from './home-hero/home-hero.component';
 import { HomeComponent } from './home.component';
 import { routing } from './home.routes';
 
