@@ -74,14 +74,14 @@ $chris-accent: (
   300: #64b5f6,
   400: #42a5f5,
   500: #2196f3,
-  600: #1e88e5,
-  700: #1976d2,
-  800: #1565c0,
-  900: #0d47a1,
-  A100: #82b1ff,
-  A200: #448aff,
-  A400: #2979ff,
-  A700: #2962ff,
+  600: #1b61e5,
+  700: #1641d2,
+  800: #162bc0,
+  900: #0c12a1,
+  A100: #3266ff,
+  A200: #0018ff,
+  A400: #0003d0,
+  A700: #07009b,
   contrast: (
     50: $black-87-opacity,
     100: $black-87-opacity,
@@ -99,6 +99,7 @@ $chris-accent: (
     A700: white,
   )
 );
+
 
 $chris-primary: mat-palette($chris-primary);
 $chris-accent:  mat-palette($chris-accent, A200, A100, A400);
