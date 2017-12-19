@@ -7,6 +7,8 @@ import * as d3Scale from 'd3-scale';
 import * as d3Geo from 'd3-geo';
 import * as d3Queue from 'd3-queue';
 import * as d3Request from 'd3-request';
+import * as d3Array from 'd3-array';
+import * as d3Interpolate from 'd3-interpolate';
 
 @Component({
   selector: 'app-home-hero',
@@ -38,7 +40,7 @@ export class HomeHeroComponent implements OnInit {
   }
 
   draw() {
-    this.svg = d3.select(this.elem).select('div');
+    this.svg = d3.select(this.elem).select('svg');
     console.log(this.svg);
     this.width = +this.svg.attr('width');
     this.height = +this.svg.attr('height');
@@ -48,7 +50,7 @@ export class HomeHeroComponent implements OnInit {
     this.color = d3Scale.scaleTime()
       .domain([new Date(1962, 0, 1), new Date(2006, 0, 1)])
       .range(['black', 'steelblue'])
-      .interpolate(d3.interpolateLab);
+      .interpolate(d3Interpolate.interpolateLab);
 
     this.hexbin = d3Hexbin.hexbin()
       .extent([[0, 0], [this.width, this.height]])
@@ -64,45 +66,47 @@ export class HomeHeroComponent implements OnInit {
 
     d3Queue.queue()
       .defer(d3Request.json, 'https://d3js.org/us-10m.v1.json')
-      .defer(d3Request.tsv, 'assets/walmart.tsv', this.typeWalmart.bind(this))
-      .await(ready);
+      .defer(d3Request.tsv, '/assets/walmart.tsv', this.typeWalmart.bind(this))
+      .await(this.ready.bind(this));
 
-    function ready(error, us, walmarts) {
-      if (error) { throw error; }
+    // this.ready(error, us, walmarts);
 
-      this.svg.append('path')
-        .datum(topojson.feature(us, us.objects.nation))
-        .attr('class', 'nation')
-        .attr('d', this.path);
-
-      this.svg.append('path')
-        .datum(topojson.mesh(us, us.objects.states, function (a, b) {
-          return a !== b;
-        }))
-        .attr('class', 'states')
-        .attr('d', this.path);
-
-      this.svg.append('g')
-        .attr('class', 'hexagon')
-        .selectAll('path')
-        .data(this.hexbin(walmarts).sort(function (a, b) {
-          return b.length - a.length;
-        }))
-        .enter().append('path')
-        .attr('d', function (d) {
-          return this.hexbin.hexagon(this.radius(d.length));
-        })
-        .attr('transform', function (d) {
-          return 'translate(' + d.x + ',' + d.y + ')';
-        })
-        .attr('fill', function (d) {
-          return this.color(d3.median(d, function (d) {
-            return +d.date;
-          }));
-        });
-    }
+  }
 
 
+  ready(error, us, walmarts) {
+    if (error) { throw error; }
+
+    this.svg.append('path')
+      .datum(topojson.feature(us, us.objects.nation))
+      .attr('class', 'nation')
+      .attr('d', this.path);
+
+    this.svg.append('path')
+      .datum(topojson.mesh(us, us.objects.states, function (a, b) {
+        return a !== b;
+      }))
+      .attr('class', 'states')
+      .attr('d', this.path);
+
+    this.svg.append('g')
+      .attr('class', 'hexagon')
+      .selectAll('path')
+      .data(this.hexbin(walmarts).sort(function (a, b) {
+        return b.length - a.length;
+      }))
+      .enter().append('path')
+      .attr('d', (d) => {
+        return this.hexbin.hexagon(this.radius(d.length));
+      })
+      .attr('transform', function (d) {
+        return 'translate(' + d.x + ',' + d.y + ')';
+      })
+      .attr('fill', (d) => {
+        return this.color(d3Array.median(d, (dd) => {
+          return +dd.date;
+        }));
+    });
   }
 
   typeWalmart(d) {
