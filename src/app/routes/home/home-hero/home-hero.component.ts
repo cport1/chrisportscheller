@@ -1,7 +1,12 @@
 import { Component, OnInit, ViewContainerRef, ElementRef } from '@angular/core';
 import * as d3 from 'd3-selection';
+import * as d3TimeFormat from 'd3-time-format';
 import * as d3Hexbin from 'd3-hexbin';
 import * as topojson from 'topojson';
+import * as d3Scale from 'd3-scale';
+import * as d3Geo from 'd3-geo';
+import * as d3Queue from 'd3-queue';
+import * as d3Request from 'd3-request';
 
 @Component({
   selector: 'app-home-hero',
@@ -21,7 +26,11 @@ export class HomeHeroComponent implements OnInit {
   projection;
   path;
 
-  constructor(private viewContainerRef:ViewContainerRef) { }
+  constructor(private viewContainerRef: ViewContainerRef) {
+    this.projection = d3Geo.geoAlbersUsa()
+      .scale(1280)
+      .translate([480, 300]);
+  }
 
   ngOnInit() {
     this.elem = this.viewContainerRef.element.nativeElement;
@@ -34,31 +43,28 @@ export class HomeHeroComponent implements OnInit {
     this.width = +this.svg.attr('width');
     this.height = +this.svg.attr('height');
 
-    this.parseDate = d3.timeParse('%x');
+    this.parseDate = d3TimeFormat.timeParse('%x');
 
-    this.color = d3.scaleTime()
+    this.color = d3Scale.scaleTime()
       .domain([new Date(1962, 0, 1), new Date(2006, 0, 1)])
       .range(['black', 'steelblue'])
       .interpolate(d3.interpolateLab);
 
-    this.hexbin = d3Hexbin()
+    this.hexbin = d3Hexbin.hexbin()
       .extent([[0, 0], [this.width, this.height]])
       .radius(10);
 
-    this.radius = d3.scaleSqrt()
+    this.radius = d3Scale.scaleSqrt()
       .domain([0, 12])
       .range([0, 10]);
 
 // Per https://github.com/topojson/us-atlas
-    this.projection = d3.geoAlbersUsa()
-      .scale(1280)
-      .translate([480, 300]);
 
-    this.path = d3.geoPath();
+    this.path = d3Geo.geoPath();
 
-    d3.queue()
-      .defer(d3.json, 'https://d3js.org/us-10m.v1.json')
-      .defer(d3.tsv, 'https://bl.ocks.org/mbostock/raw/4330486/walmart.tsv', typeWalmart)
+    d3Queue.queue()
+      .defer(d3Request.json, 'https://d3js.org/us-10m.v1.json')
+      .defer(d3Request.tsv, 'assets/walmart.tsv', this.typeWalmart.bind(this))
       .await(ready);
 
     function ready(error, us, walmarts) {
@@ -96,12 +102,14 @@ export class HomeHeroComponent implements OnInit {
         });
     }
 
-    function typeWalmart(d) {
-      this.p = this.projection(d);
-      d[0] = this.p[0], d[1] = this.p[1];
-      d.date = this.parseDate(d.date);
-      return d;
-    }
+
+  }
+
+  typeWalmart(d) {
+    this.p = this.projection(d);
+    d[0] = this.p[0], d[1] = this.p[1];
+    d.date = this.parseDate(d.date);
+    return d;
   }
 
 }
