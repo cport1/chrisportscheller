@@ -38,6 +38,9 @@ export class HomeHeroComponent implements OnInit {
     this.elem = this.viewContainerRef.element.nativeElement;
     this.draw();
   }
+  // for (var i =0; i < temp1.length; i++) {
+  //   delete temp1[i]['type']
+  // }
 
   draw() {
     this.svg = d3.select(this.elem).select('svg');
@@ -66,15 +69,31 @@ export class HomeHeroComponent implements OnInit {
 
     d3Queue.queue()
       .defer(d3Request.json, 'https://d3js.org/us-10m.v1.json')
-      .defer(d3Request.tsv, '/assets/walmart.tsv', this.typeWalmart.bind(this))
+      .defer(d3Request.json, '/assets/places.json')
       .await(this.ready.bind(this));
 
     // this.ready(error, us, walmarts);
 
   }
 
+  places2(d) {
+    console.log(d);
+    this.p = this.projection(d[0].geometry.coordinates);
+    console.log(this.p);
+    d[0] = this.p[0],
+    d[1] = this.p[1];
+    return d;
+  }
+  places(d) {
+    console.log(d);
+    this.p = this.projection(d);
+    // console.log(this.p);
+    d[0] = this.p[0], d[1] = this.p[1];
+    d.date = this.parseDate(d.date);
+    return d;
+  }
 
-  ready(error, us, walmarts) {
+  ready(error, us, places) {
     if (error) { throw error; }
 
     this.svg.append('path')
@@ -92,7 +111,7 @@ export class HomeHeroComponent implements OnInit {
     this.svg.append('g')
       .attr('class', 'hexagon')
       .selectAll('path')
-      .data(this.hexbin(walmarts).sort(function (a, b) {
+      .data(this.hexbin(places.geometry.coordinates).sort(function (a, b) {
         return b.length - a.length;
       }))
       .enter().append('path')
@@ -103,17 +122,12 @@ export class HomeHeroComponent implements OnInit {
         return 'translate(' + d.x + ',' + d.y + ')';
       })
       .attr('fill', (d) => {
-        return this.color(d3Array.median(d, (dd) => {
-          return +dd.date;
+        return this.color(d3Array.median(d, () => {
+          return 1;
         }));
     });
   }
 
-  typeWalmart(d) {
-    this.p = this.projection(d);
-    d[0] = this.p[0], d[1] = this.p[1];
-    d.date = this.parseDate(d.date);
-    return d;
-  }
+
 
 }
