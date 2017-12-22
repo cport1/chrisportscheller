@@ -19,6 +19,7 @@ export class HomeHeroComponent implements OnInit {
   elem;
   svg;
   p;
+  usJSON;
   width;
   height;
   parseDate;
@@ -27,7 +28,7 @@ export class HomeHeroComponent implements OnInit {
   radius;
   projection;
   path;
-
+  data;
   constructor(private viewContainerRef: ViewContainerRef) {
     this.projection = d3Geo.geoAlbersUsa()
       .scale(1280)
@@ -38,13 +39,9 @@ export class HomeHeroComponent implements OnInit {
     this.elem = this.viewContainerRef.element.nativeElement;
     this.draw();
   }
-  // for (var i =0; i < temp1.length; i++) {
-  //   delete temp1[i]['type']
-  // }
 
   draw() {
     this.svg = d3.select(this.elem).select('svg');
-    console.log(this.svg);
     this.width = +this.svg.attr('width');
     this.height = +this.svg.attr('height');
 
@@ -69,31 +66,29 @@ export class HomeHeroComponent implements OnInit {
 
     d3Queue.queue()
       .defer(d3Request.json, 'https://d3js.org/us-10m.v1.json')
+      // .defer(d3Request.tsv, '/assets/walmart.tsv', this.places.bind(this))
       .defer(d3Request.json, '/assets/places.json')
       .await(this.ready.bind(this));
-
-    // this.ready(error, us, walmarts);
-
   }
 
   places2(d) {
-    console.log(d);
-    this.p = this.projection(d[0].geometry.coordinates);
-    console.log(this.p);
-    d[0] = this.p[0],
-    d[1] = this.p[1];
-    return d;
-  }
-  places(d) {
-    console.log(d);
-    this.p = this.projection(d);
-    // console.log(this.p);
-    d[0] = this.p[0], d[1] = this.p[1];
-    d.date = this.parseDate(d.date);
-    return d;
+    let $data = [];
+    d.forEach((dd) => {
+      let coors = dd.geometry.coordinates;
+      this.p = this.projection(coors);
+      if (this.p) {
+        coors[0] = this.p[0];
+        coors[1] = this.p[1];
+        $data.push(coors);
+      }
+    });
+    console.log(this.data);
+    return $data;
   }
 
   ready(error, us, places) {
+    this.data = this.places2(places);
+    console.log(this.data);
     if (error) { throw error; }
 
     this.svg.append('path')
@@ -107,11 +102,10 @@ export class HomeHeroComponent implements OnInit {
       }))
       .attr('class', 'states')
       .attr('d', this.path);
-
     this.svg.append('g')
       .attr('class', 'hexagon')
       .selectAll('path')
-      .data(this.hexbin(places.geometry.coordinates).sort(function (a, b) {
+      .data(this.hexbin(this.data).sort(function (a, b) {
         return b.length - a.length;
       }))
       .enter().append('path')
@@ -121,11 +115,7 @@ export class HomeHeroComponent implements OnInit {
       .attr('transform', function (d) {
         return 'translate(' + d.x + ',' + d.y + ')';
       })
-      .attr('fill', (d) => {
-        return this.color(d3Array.median(d, () => {
-          return 1;
-        }));
-    });
+      .attr('fill', 'white');
   }
 
 
