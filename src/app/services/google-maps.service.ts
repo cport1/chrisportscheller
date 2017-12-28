@@ -26,13 +26,6 @@ export class GoogleMapsService {
   onReady(): Promise<void> {
     return this.scriptLoadingPromise;
   }
-
-  initMap(mapHtmlElement: HTMLElement, options: google.maps.MapOptions): Promise<google.maps.Map> {
-    return this.onReady().then(() => {
-      return this.map = new google.maps.Map(mapHtmlElement, options);
-    });
-  }
-
   private initScriptLoadingPromise() {
     const script = window.document.createElement('script');
     script.type = 'text/javascript';

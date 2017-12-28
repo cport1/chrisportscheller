@@ -33,6 +33,7 @@ export class HomeHeroComponent implements OnInit {
   projection;
   path;
   data;
+  map;
   @ViewChild('map') mapRef: ElementRef;
   constructor(
     private viewContainerRef: ViewContainerRef,
@@ -47,11 +48,14 @@ export class HomeHeroComponent implements OnInit {
     this.elem = this.viewContainerRef.element.nativeElement;
     this.draw();
 
-    this.gmapService.initMap(this.mapRef.nativeElement, {
-      center: {lat: 40.730610, lng: -73.935242},
-      scrollwheel: true,
-      zoom: 8
+    this.gmapService.onReady().then(() => {
+      this.map = new google.maps.Map(this.mapRef.nativeElement, {
+        center: {lat: 40.7128, lng: -74.0060},
+        scrollwheel: true,
+        zoom: 8
+      });
     });
+
   }
 
   draw() {
