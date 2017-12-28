@@ -11,7 +11,8 @@ import { LoadingComponent } from './components/loading/loading.component';
 import { MainComponent } from './routes/main/main.component';
 
 import { routes } from './routes';
-import {RouterModule} from "@angular/router";
+import {RouterModule} from '@angular/router';
+import {GoogleMapsService} from './services/google-maps.service';
 
 @NgModule({
   declarations: [
@@ -28,7 +29,7 @@ import {RouterModule} from "@angular/router";
     }),
     ServiceWorkerModule.register('/ngsw-worker.js', { enabled: environment.production })
   ],
-  providers: [],
+  providers: [GoogleMapsService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

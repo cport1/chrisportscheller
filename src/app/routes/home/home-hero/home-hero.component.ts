@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewContainerRef, ElementRef } from '@angular/core';
+import {Component, OnInit, ViewContainerRef, ElementRef, ViewChild} from '@angular/core';
 import * as d3 from 'd3-selection';
 import * as d3TimeFormat from 'd3-time-format';
 import * as d3Hexbin from 'd3-hexbin';
@@ -9,6 +9,10 @@ import * as d3Queue from 'd3-queue';
 import * as d3Request from 'd3-request';
 import * as d3Array from 'd3-array';
 import * as d3Interpolate from 'd3-interpolate';
+import {GoogleMapsService} from '../../../services/google-maps.service';
+
+
+
 
 @Component({
   selector: 'app-home-hero',
@@ -29,7 +33,11 @@ export class HomeHeroComponent implements OnInit {
   projection;
   path;
   data;
-  constructor(private viewContainerRef: ViewContainerRef) {
+  @ViewChild('map') mapRef: ElementRef;
+  constructor(
+    private viewContainerRef: ViewContainerRef,
+    private gmapService: GoogleMapsService
+  ) {
     this.projection = d3Geo.geoAlbersUsa()
       .scale(1280)
       .translate([480, 300]);
@@ -38,6 +46,12 @@ export class HomeHeroComponent implements OnInit {
   ngOnInit() {
     this.elem = this.viewContainerRef.element.nativeElement;
     this.draw();
+
+    this.gmapService.initMap(this.mapRef.nativeElement, {
+      center: {lat: 40.730610, lng: -73.935242},
+      scrollwheel: true,
+      zoom: 8
+    });
   }
 
   draw() {
@@ -54,11 +68,11 @@ export class HomeHeroComponent implements OnInit {
 
     this.hexbin = d3Hexbin.hexbin()
       .extent([[0, 0], [this.width, this.height]])
-      .radius(10);
+      .radius(5);
 
     this.radius = d3Scale.scaleSqrt()
-      .domain([0, 12])
-      .range([0, 10]);
+      .domain([0, 10])
+      .range([2, 5]);
 
 // Per https://github.com/topojson/us-atlas
 
