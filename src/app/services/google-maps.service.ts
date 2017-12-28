@@ -9,8 +9,6 @@ const getScriptSrc = (callbackName) => {
 
 
 export class GoogleMapsService {
-
-  private map: google.maps.Map;
   private geocoder: google.maps.Geocoder;
   private scriptLoadingPromise: Promise<void>;
 

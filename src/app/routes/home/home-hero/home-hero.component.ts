@@ -34,6 +34,7 @@ export class HomeHeroComponent implements OnInit {
   path;
   data;
   map;
+  mapOverlay;
   @ViewChild('map') mapRef: ElementRef;
   constructor(
     private viewContainerRef: ViewContainerRef,
@@ -46,7 +47,6 @@ export class HomeHeroComponent implements OnInit {
 
   ngOnInit() {
     this.elem = this.viewContainerRef.element.nativeElement;
-    this.draw();
 
     this.gmapService.onReady().then(() => {
       this.map = new google.maps.Map(this.mapRef.nativeElement, {
@@ -56,6 +56,7 @@ export class HomeHeroComponent implements OnInit {
       });
     });
 
+    this.map.addListener('idle', this.draw());
   }
 
   draw() {
