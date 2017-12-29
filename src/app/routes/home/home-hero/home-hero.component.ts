@@ -10,8 +10,7 @@ import * as d3Request from 'd3-request';
 import * as d3Array from 'd3-array';
 import * as d3Interpolate from 'd3-interpolate';
 import {GoogleMapsService} from '../../../services/google-maps.service';
-
-
+import {} from '@types/googlemaps';
 
 
 @Component({
@@ -34,7 +33,7 @@ export class HomeHeroComponent implements OnInit {
   path;
   data;
   map;
-  mapOverlay;
+  overlay;
   @ViewChild('map') mapRef: ElementRef;
   constructor(
     private viewContainerRef: ViewContainerRef,
@@ -45,18 +44,110 @@ export class HomeHeroComponent implements OnInit {
       .translate([480, 300]);
   }
 
+
+
+
   ngOnInit() {
     this.elem = this.viewContainerRef.element.nativeElement;
+    this.draw();
 
     this.gmapService.onReady().then(() => {
       this.map = new google.maps.Map(this.mapRef.nativeElement, {
-        center: {lat: 40.7128, lng: -74.0060},
+        center: {lat: 62.323907, lng: -150.109291},
         scrollwheel: true,
         zoom: 8
       });
+
+      class HexbinOverlay extends google.maps.OverlayView {
+
+        bounds_;
+        image_;
+        map_;
+        div_;
+
+        constructor(bounds, image, map) {
+          super();
+          // Initialize all properties.
+          this.bounds_ = bounds;
+          this.image_ = image;
+          this.map_ = map;
+
+          // Define a property to hold the image's div. We'll
+          // actually create this div upon receipt of the onAdd()
+          // method so we'll leave it null for now.
+          this.div_ = null;
+
+          // Explicitly call setMap on this overlay.
+          this.setMap(map);
+        }
+
+        /**
+         * onAdd is called when the map's panes are ready and the overlay has been
+         * added to the map.
+         */
+        onAdd() {
+          const div = document.createElement('div');
+          div.style.borderStyle = 'none';
+          div.style.borderWidth = '0px';
+          div.style.position = 'absolute';
+
+          // Create the img element and attach it to the div.
+          const img = document.createElement('img');
+          img.src = this.image_;
+          img.style.width = '100%';
+          img.style.height = '100%';
+          img.style.position = 'absolute';
+          div.appendChild(img);
+
+          this.div_ = div;
+
+          // Add the element to the "overlayLayer" pane.
+          const panes = this.getPanes();
+          panes.overlayLayer.appendChild(div);
+
+        }
+
+        draw() {
+
+          // We use the south-west and north-east
+          // coordinates of the overlay to peg it to the correct position and size.
+          // To do this, we need to retrieve the projection from the overlay.
+          const overlayProjection = this.getProjection();
+
+          // Retrieve the south-west and north-east coordinates of this overlay
+          // in LatLngs and convert them to pixel coordinates.
+          // We'll use these coordinates to resize the div.
+          const sw = overlayProjection.fromLatLngToDivPixel(this.bounds_.getSouthWest());
+          const ne = overlayProjection.fromLatLngToDivPixel(this.bounds_.getNorthEast());
+
+          // Resize the image's div to fit the indicated dimensions.
+          const div = this.div_;
+          div.style.left = sw.x + 'px';
+          div.style.top = ne.y + 'px';
+          div.style.width = (ne.x - sw.x) + 'px';
+          div.style.height = (sw.y - ne.y) + 'px';
+        }
+
+        // The onRemove() method will be called automatically from the API if
+        // we ever set the overlay's map property to 'null'.
+        onRemove() {
+          this.div_.parentNode.removeChild(this.div_);
+          this.div_ = null;
+        }
+      }
+
+      const bounds = new google.maps.LatLngBounds(
+        new google.maps.LatLng(62.281819, -150.287132),
+        new google.maps.LatLng(62.400471, -150.005608));
+
+      const srcImage = 'https://i.imgur.com/NnNJ3vr.jpg';
+
+      // The custom USGSOverlay object contains the USGS image,
+      // the bounds of the image, and a reference to the map.
+      this.overlay = new HexbinOverlay(bounds, srcImage, this.map);
+
     });
 
-    this.map.addListener('idle', this.draw());
   }
 
   draw() {
